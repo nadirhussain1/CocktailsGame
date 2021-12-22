@@ -40,4 +40,13 @@ class GameUnitTests {
         Assert.assertSame(firstQuestion,nextQuestion)
     }
 
+    @Test
+    fun whenGettingNextQuestion_withoutMoreQuestions_shouldReturnNull(){
+        val game=Game(emptyList())
+        val nextQuestion = game.getNextQuestion()
+
+        Assert.assertNull(nextQuestion)
+
+    }
+
 }
