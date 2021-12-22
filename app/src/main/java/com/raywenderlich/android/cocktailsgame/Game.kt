@@ -1,6 +1,6 @@
 package com.raywenderlich.android.cocktailsgame
 
-class Game(high:Int=0) {
+class Game(val questions:List<Question>, high:Int=0) {
     var currentScore=0
     var highestScore=0
 
@@ -13,5 +13,9 @@ class Game(high:Int=0) {
         if(currentScore>highestScore) {
             highestScore++
         }
+    }
+
+    fun getNextQuestion():Question{
+       return questions.get(0)
     }
 }

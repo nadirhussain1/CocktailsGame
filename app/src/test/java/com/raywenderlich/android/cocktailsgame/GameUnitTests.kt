@@ -7,7 +7,7 @@ class GameUnitTests {
 
     @Test
     fun whenIncrementingScore_shouldIncrementCurrentScore(){
-        val game = Game()
+        val game = Game(emptyList())
         game.incrementScore()
 
         Assert.assertEquals(1,game.currentScore)
@@ -15,7 +15,7 @@ class GameUnitTests {
 
     @Test
     fun whenIncrementingScore_shouldIncrementHighestScore(){
-        val game=Game()
+        val game=Game(emptyList())
         game.incrementScore()
 
         Assert.assertEquals(1,game.highestScore)
@@ -23,9 +23,21 @@ class GameUnitTests {
 
     @Test
     fun whenIncrementingScore_belowHighestScore_shouldNotIncrementHighestScore(){
-        val game=Game(10)
+        val game=Game(emptyList(),10)
         game.incrementScore()
 
         Assert.assertEquals(10,game.highestScore)
     }
+
+    @Test
+    fun whenGettingNextQuestion_shouldReturnFirst(){
+        val firstQuestion = Question("Correct","Incorrect")
+        val questions= listOf(firstQuestion)
+
+        val game=Game(questions)
+        val nextQuestion = game.getNextQuestion()
+
+        Assert.assertSame(firstQuestion,nextQuestion)
+    }
+
 }
