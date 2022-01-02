@@ -2,33 +2,10 @@ package com.raywenderlich.android.cocktailsgame
 
 import org.junit.Assert
 import org.junit.Test
+import org.mockito.ArgumentMatchers.anyString
+import org.mockito.kotlin.*
 
 class GameUnitTests {
-
-    @Test
-    fun whenIncrementingScore_shouldIncrementCurrentScore(){
-        val game = Game(emptyList())
-        game.incrementScore()
-
-        Assert.assertEquals(1,game.currentScore)
-    }
-
-    @Test
-    fun whenIncrementingScore_shouldIncrementHighestScore(){
-        val game=Game(emptyList())
-        game.incrementScore()
-
-        Assert.assertEquals(1,game.highestScore)
-    }
-
-    @Test
-    fun whenIncrementingScore_belowHighestScore_shouldNotIncrementHighestScore(){
-        val game=Game(emptyList(),10)
-        game.incrementScore()
-
-        Assert.assertEquals(10,game.highestScore)
-    }
-
     @Test
     fun whenGettingNextQuestion_shouldReturnFirst(){
         val firstQuestion = Question("Correct","Incorrect")
@@ -46,7 +23,36 @@ class GameUnitTests {
         val nextQuestion = game.getNextQuestion()
 
         Assert.assertNull(nextQuestion)
+    }
 
+    @Test
+    fun whenAnswering_shouldDelegateToQuestion(){
+        val question = mock<Question>()
+
+        val game = Game(listOf(question))
+        game.answer(question,"OPTION")
+
+        verify(question).answer(eq("OPTION"))
+    }
+
+    @Test
+    fun whenAnsweringCorrectly_shouldIncrementCurrentScore() {
+        val question = mock<Question>()
+        whenever(question.answer(anyString())).thenReturn(true)
+        val score = mock<Score>()
+        val game = Game(listOf(question), score)
+        game.answer(question, "OPTION")
+        verify(score).increment()
+    }
+
+    @Test
+    fun whenAnsweringIncorrectly_shouldNotIncrementCurrentScore() {
+        val question = mock<Question>()
+        whenever(question.answer(anyString())).thenReturn(false)
+        val score = mock<Score>()
+        val game = Game(listOf(question), score)
+        game.answer(question, "OPTION")
+        verify(score, never()).increment()
     }
 
 }
